@@ -207,16 +207,84 @@ body {
     border-radius: 8px;
     border-left: 4px solid var(--primary-color);
     transition: transform 0.2s;
+    position: relative;
 }
 
 .member-card:hover {
     transform: translateX(4px);
 }
 
+.member-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
 .member-card h3 {
     color: var(--text-primary);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
     font-size: 1.1rem;
+}
+
+.member-menu {
+    position: relative;
+}
+
+.member-menu-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+    border-radius: 50%;
+}
+
+.member-menu-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--text-primary);
+}
+
+.member-menu-btn .material-icons {
+    font-size: 1.25rem;
+}
+
+.member-menu-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--surface);
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    min-width: 150px;
+    z-index: 100;
+    overflow: hidden;
+}
+
+.member-menu-dropdown.active {
+    display: block;
+}
+
+.member-menu-item {
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.member-menu-item:hover {
+    background-color: var(--background);
+}
+
+.member-menu-item .material-icons {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
 }
 
 .member-card .member-title {
@@ -244,6 +312,13 @@ body {
     font-size: 1rem;
 }
 
+.member-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
 .member-category {
     display: inline-block;
     padding: 0.25rem 0.75rem;
@@ -251,8 +326,25 @@ body {
     color: white;
     border-radius: 12px;
     font-size: 0.75rem;
-    margin-top: 0.5rem;
     text-transform: capitalize;
+}
+
+.member-status {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    color: white;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    text-transform: capitalize;
+    font-weight: 500;
+}
+
+.member-status.core {
+    background-color: var(--success-color);
+}
+
+.member-status.non-core {
+    background-color: var(--warning-color);
 }
 
 .member-expertise {

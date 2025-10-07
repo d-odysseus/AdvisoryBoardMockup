@@ -62,6 +62,15 @@ function setupEventListeners() {
 
     // Tactics checkboxes change event
     document.getElementById('tactics-checkboxes').addEventListener('change', handleTacticsChange);
+
+    // Close member menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.member-menu')) {
+            document.querySelectorAll('.member-menu-dropdown').forEach(menu => {
+                menu.classList.remove('active');
+            });
+        }
+    });
 }
 
 // Summary Cards
@@ -157,6 +166,7 @@ function handleAddMember(e) {
         email: document.getElementById('member-email').value,
         phone: document.getElementById('member-phone').value,
         category: document.getElementById('member-category').value,
+        status: document.getElementById('member-status').value,
         expertise: document.getElementById('member-expertise').value
     };
 
@@ -176,7 +186,24 @@ function renderMembers() {
 
     container.innerHTML = boardMembers.map(member => `
         <div class="member-card">
-            <h3>${member.name}</h3>
+            <div class="member-card-header">
+                <h3>${member.name}</h3>
+                <div class="member-menu">
+                    <button class="member-menu-btn" onclick="toggleMemberMenu(event, '${member.id}')">
+                        <span class="material-icons">more_vert</span>
+                    </button>
+                    <div class="member-menu-dropdown" id="menu-${member.id}">
+                        <div class="member-menu-item" onclick="editMember('${member.id}')">
+                            <span class="material-icons">edit</span>
+                            <span>Edit</span>
+                        </div>
+                        <div class="member-menu-item" onclick="deleteMember('${member.id}')">
+                            <span class="material-icons">delete</span>
+                            <span>Delete</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="member-title">${member.title}</div>
             <div class="member-org">${member.organization}</div>
             <div class="member-contact">
@@ -187,10 +214,42 @@ function renderMembers() {
                 <span class="material-icons">phone</span>
                 ${member.phone}
             </div>
-            <span class="member-category">${formatCategory(member.category)}</span>
+            <div class="member-badges">
+                <span class="member-category">${formatCategory(member.category)}</span>
+                <span class="member-status ${member.status}">${formatCategory(member.status)}</span>
+            </div>
             ${member.expertise ? `<div class="member-expertise"><strong>Expertise:</strong> ${member.expertise}</div>` : ''}
         </div>
     `).join('');
+}
+
+function toggleMemberMenu(event, memberId) {
+    event.stopPropagation();
+
+    // Close all other menus
+    document.querySelectorAll('.member-menu-dropdown').forEach(menu => {
+        if (menu.id !== `menu-${memberId}`) {
+            menu.classList.remove('active');
+        }
+    });
+
+    // Toggle current menu
+    const menu = document.getElementById(`menu-${memberId}`);
+    menu.classList.toggle('active');
+}
+
+function editMember(memberId) {
+    console.log('Edit member:', memberId);
+    // Close menu
+    document.getElementById(`menu-${memberId}`).classList.remove('active');
+    // Non-functional for mockup
+}
+
+function deleteMember(memberId) {
+    console.log('Delete member:', memberId);
+    // Close menu
+    document.getElementById(`menu-${memberId}`).classList.remove('active');
+    // Non-functional for mockup
 }
 
 function formatCategory(category) {
@@ -378,6 +437,7 @@ function loadMockData() {
             email: 'sjohnson@premierauto.com',
             phone: '(555) 123-4567',
             category: 'employer',
+            status: 'core',
             expertise: 'EV maintenance and repair, dealership operations, technician training'
         },
         {
@@ -388,6 +448,7 @@ function loadMockData() {
             email: 'mchen@tesla.com',
             phone: '(555) 234-5678',
             category: 'employer',
+            status: 'core',
             expertise: 'Electric vehicle systems, battery technology, diagnostic tools'
         },
         {
@@ -398,6 +459,7 @@ function loadMockData() {
             email: 'erodriguez@greentrans.org',
             phone: '(555) 345-6789',
             category: 'non-profit',
+            status: 'non-core',
             expertise: 'EV adoption strategies, sustainable transportation, workforce development'
         },
         {
@@ -408,6 +470,7 @@ function loadMockData() {
             email: 'dthompson@state.gov',
             phone: '(555) 456-7890',
             category: 'public-agency',
+            status: 'non-core',
             expertise: 'EV charging infrastructure, state regulations, fleet electrification'
         }
     ];
