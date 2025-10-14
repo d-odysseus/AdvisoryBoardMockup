@@ -33,7 +33,7 @@
                     <span class="material-icons">flag</span>
                     <div class="summary-info">
                         <h3 id="goal-count">0</h3>
-                        <p>Priority Goals</p>
+                        <p>Priority Tactics</p>
                     </div>
                 </div>
                 <div class="summary-card">
@@ -45,13 +45,19 @@
                 </div>
             </section>
 
-            <!-- Priority Goals Section -->
+            <!-- Priority Tactics Section -->
             <section class="section">
                 <div class="section-header">
-                    <h2>Priority Goals</h2>
+                    <div class="section-title-with-tooltip">
+                        <h2>Priority Tactics</h2>
+                        <div class="tooltip-container">
+                            <span class="material-icons tooltip-icon">info</span>
+                            <div class="tooltip-text">Priority tactics are selected from current and next year Unit Planning tactics. They represent tactics key to program mission and vision.</div>
+                        </div>
+                    </div>
                     <button class="btn-primary" id="add-goal-btn">
                         <span class="material-icons">add</span>
-                        Add Goal
+                        Add Tactic
                     </button>
                 </div>
                 <div id="priority-goals-container" class="goals-container"></div>
@@ -60,7 +66,13 @@
             <!-- Board Members Section -->
             <section class="section">
                 <div class="section-header">
-                    <h2>Advisory Board Members</h2>
+                    <div class="section-title-with-tooltip">
+                        <h2>Advisory Board Members</h2>
+                        <div class="tooltip-container">
+                            <span class="material-icons tooltip-icon">info</span>
+                            <div class="tooltip-text">Maintain up to 6 core members and up to 20 members total.</div>
+                        </div>
+                    </div>
                     <button class="btn-primary" id="add-member-btn">
                         <span class="material-icons">person_add</span>
                         Add Member
@@ -131,10 +143,30 @@
                         <option value="core">Core</option>
                         <option value="non-core">Non-Core</option>
                     </select>
+                    <div class="field-explanation">
+                        <p><strong>Core:</strong> Standing members attending all meetings, bringing expertise of core, persistent relevance to the program.</p>
+                        <p><strong>Non-Core:</strong> Members attending some meetings, bringing specialized knowledge of timely relevance to the agenda.</p>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="member-expertise">Content Expertise</label>
                     <textarea id="member-expertise" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="member-profile-image">Profile Image</label>
+                    <input type="file" id="member-profile-image" accept="image/*" style="display: none;">
+                    <div class="profile-image-upload-container">
+                        <div class="profile-image-preview" id="profile-image-preview">
+                            <span class="material-icons">person</span>
+                        </div>
+                        <button type="button" class="btn-secondary" id="upload-profile-image-btn">
+                            <span class="material-icons">upload</span>
+                            Upload Image (Mock)
+                        </button>
+                    </div>
+                    <div class="field-explanation">
+                        <p><strong>Mock Feature:</strong> This is a demonstration of profile image upload functionality. In a production environment, images would be uploaded to a server.</p>
+                    </div>
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" id="cancel-member-btn">Cancel</button>
@@ -144,16 +176,27 @@
         </div>
     </div>
 
-    <!-- Modal for Add Goal -->
+    <!-- Modal for Add Tactic -->
     <div id="goal-modal" class="modal">
-        <div class="modal-content modal-small">
+        <div class="modal-content modal-medium">
             <div class="modal-header">
-                <h2>Select Priority Goal</h2>
+                <h2>Select Priority Tactic</h2>
                 <button class="close-btn" id="close-goal-modal">
                     <span class="material-icons">close</span>
                 </button>
             </div>
             <form id="goal-form">
+                <div class="form-group">
+                    <label>Select Year</label>
+                    <div class="year-toggle-group">
+                        <button type="button" class="year-toggle-btn active" data-year="2025">
+                            Current Year (2025)
+                        </button>
+                        <button type="button" class="year-toggle-btn" data-year="2026">
+                            Next Year (2026)
+                        </button>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label for="goal-select">Priority Tactic *</label>
                     <select id="goal-select" required>
@@ -162,7 +205,7 @@
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" id="cancel-goal-btn">Cancel</button>
-                    <button type="submit" class="btn-primary">Add Goal</button>
+                    <button type="submit" class="btn-primary">Add Tactic</button>
                 </div>
             </form>
         </div>
@@ -211,6 +254,14 @@
                     </button>
                 </div>
 
+                <div class="form-group">
+                    <label>Other documents</label>
+                    <button type="button" class="btn-upload" disabled>
+                        <span class="material-icons">upload_file</span>
+                        Upload Documents (Mock)
+                    </button>
+                </div>
+
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" id="cancel-meeting-btn">Cancel</button>
                     <button type="submit" class="btn-primary">Add Meeting</button>
@@ -219,6 +270,22 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <!-- Error Modal for Max Tactics Limit -->
+    <div id="error-modal" class="modal">
+        <div class="modal-content modal-error">
+            <div class="error-modal-icon">
+                <span class="material-icons">info</span>
+            </div>
+            <div class="error-modal-body">
+                <h2>Maximum Limit Reached</h2>
+                <p id="error-message">You have reached the maximum limit of 5 priority tactics. Please remove a tactic before adding a new one.</p>
+            </div>
+            <div class="error-modal-actions">
+                <button class="btn-primary" id="close-error-modal">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
 </body>
 </html>
