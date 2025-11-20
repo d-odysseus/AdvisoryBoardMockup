@@ -8,6 +8,7 @@ import { DEFAULT_TACTIC_YEAR } from '../config/constants.js';
 class AppState {
     constructor() {
         this._boardMembers = [];
+        this._specialSessionMembers = [];
         this._priorityGoals = [];
         this._meetings = [];
         this._selectedTacticYear = DEFAULT_TACTIC_YEAR;
@@ -60,6 +61,38 @@ class AppState {
 
     getMemberById(id) {
         return this._boardMembers.find(m => m.id === id);
+    }
+
+    // Special Session Members
+    get specialSessionMembers() {
+        return [...this._specialSessionMembers];
+    }
+
+    set specialSessionMembers(value) {
+        this._specialSessionMembers = value;
+        this._notify('specialSessionMembers');
+    }
+
+    addSpecialSessionMember(member) {
+        this._specialSessionMembers.push(member);
+        this._notify('specialSessionMembers');
+    }
+
+    updateSpecialSessionMember(id, updatedData) {
+        const index = this._specialSessionMembers.findIndex(m => m.id === id);
+        if (index !== -1) {
+            this._specialSessionMembers[index] = { ...this._specialSessionMembers[index], ...updatedData };
+            this._notify('specialSessionMembers');
+        }
+    }
+
+    deleteSpecialSessionMember(id) {
+        this._specialSessionMembers = this._specialSessionMembers.filter(m => m.id !== id);
+        this._notify('specialSessionMembers');
+    }
+
+    getSpecialSessionMemberById(id) {
+        return this._specialSessionMembers.find(m => m.id === id);
     }
 
     // Priority Goals
@@ -149,10 +182,19 @@ class AppState {
 
     // Summary counts
     getSummary() {
+        // Calculate total volunteer hours
+        const totalVolunteerHours = this._meetings.reduce((total, meeting) => {
+            const attendeeCount = meeting.attendees ? meeting.attendees.length : 0;
+            const duration = meeting.duration || 0;
+            return total + (attendeeCount * duration);
+        }, 0);
+
         return {
             memberCount: this._boardMembers.length,
+            specialSessionMemberCount: this._specialSessionMembers.length,
             goalCount: this._priorityGoals.length,
-            meetingCount: this._meetings.length
+            meetingCount: this._meetings.length,
+            totalVolunteerHours: totalVolunteerHours
         };
     }
 }

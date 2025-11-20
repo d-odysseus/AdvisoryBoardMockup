@@ -46,11 +46,13 @@ export class ModalManager {
             }
         });
 
-        // Form submit listener
-        if (this.form && this.onSubmit) {
+        // Form submit listener - will use this.onSubmit when form is submitted
+        if (this.form) {
             this.form.addEventListener('submit', (e) => {
                 e.preventDefault();
-                this.onSubmit(e);
+                if (this.onSubmit) {
+                    this.onSubmit(e);
+                }
             });
         }
 

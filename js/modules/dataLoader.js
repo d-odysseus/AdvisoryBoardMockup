@@ -4,7 +4,7 @@
  */
 
 import { state } from './state.js';
-import { MOCK_MEMBERS, MOCK_GOALS, MOCK_MEETINGS } from '../config/mockData.js';
+import { MOCK_MEMBERS, MOCK_SPECIAL_SESSION_MEMBERS, MOCK_GOALS, MOCK_MEETINGS } from '../config/mockData.js';
 import { AVAILABLE_TACTICS } from '../config/constants.js';
 
 export class DataLoader {
@@ -14,6 +14,9 @@ export class DataLoader {
     static loadMockData() {
         // Load members
         state.boardMembers = [...MOCK_MEMBERS];
+
+        // Load special session members
+        state.specialSessionMembers = [...MOCK_SPECIAL_SESSION_MEMBERS];
 
         // Load goals
         const goals = MOCK_GOALS
@@ -36,6 +39,7 @@ export class DataLoader {
      */
     static clearData() {
         state.boardMembers = [];
+        state.specialSessionMembers = [];
         state.priorityGoals = [];
         state.meetings = [];
     }

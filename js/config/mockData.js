@@ -49,6 +49,20 @@ export const MOCK_MEMBERS = [
     }
 ];
 
+export const MOCK_SPECIAL_SESSION_MEMBERS = [
+    {
+        id: 'ss-1',
+        name: 'Dr. Patricia Martinez',
+        organization: 'National Battery Research Institute',
+        title: 'Senior Research Scientist',
+        email: 'pmartinez@nbri.org',
+        phone: '(555) 789-0123',
+        category: 'other',
+        status: 'special-session',
+        expertise: 'Advanced battery chemistry, lithium-ion technology, thermal management systems'
+    }
+];
+
 export const MOCK_GOALS = [
     'ev-certificate-2025',
     'adas-curriculum-2025',
@@ -60,6 +74,7 @@ export const MOCK_MEETINGS = [
     {
         id: '1',
         date: '2025-09-15',
+        duration: 2.5,
         attendeeIds: ['1', '2', '3'],
         tacticsDiscussed: [
             {

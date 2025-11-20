@@ -4,6 +4,7 @@
 
 export const MAX_PRIORITY_TACTICS = 5;
 export const MAX_BOARD_MEMBERS = 20;
+export const MAX_SPECIAL_SESSION_MEMBERS = 20;
 export const DEFAULT_TACTIC_YEAR = 2025;
 export const TACTIC_TRUNCATE_WORDS = 15;
 

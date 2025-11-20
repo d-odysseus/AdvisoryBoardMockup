@@ -30,6 +30,13 @@
                     </div>
                 </div>
                 <div class="summary-card">
+                    <span class="material-icons">groups</span>
+                    <div class="summary-info">
+                        <h3 id="special-session-member-count">0</h3>
+                        <p>Special Session Members</p>
+                    </div>
+                </div>
+                <div class="summary-card">
                     <span class="material-icons">flag</span>
                     <div class="summary-info">
                         <h3 id="goal-count">0</h3>
@@ -41,6 +48,13 @@
                     <div class="summary-info">
                         <h3 id="meeting-count">0</h3>
                         <p>Meetings</p>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <span class="material-icons">schedule</span>
+                    <div class="summary-info">
+                        <h3 id="volunteer-hours">0</h3>
+                        <p>Volunteer Hours</p>
                     </div>
                 </div>
             </section>
@@ -81,6 +95,24 @@
                 <div id="members-list" class="members-grid"></div>
             </section>
 
+            <!-- Special Session Members Section -->
+            <section class="section">
+                <div class="section-header">
+                    <div class="section-title-with-tooltip">
+                        <h2>Special Session Members</h2>
+                        <div class="tooltip-container">
+                            <span class="material-icons tooltip-icon">info</span>
+                            <div class="tooltip-text">Members who attend special sessions dedicated to priority topics outside regular advisory board meetings.</div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="add-special-session-member-btn">
+                        <span class="material-icons">person_add</span>
+                        Add Member
+                    </button>
+                </div>
+                <div id="special-session-members-list" class="members-grid"></div>
+            </section>
+
             <!-- Meetings Section -->
             <section class="section">
                 <div class="section-header">
@@ -107,27 +139,27 @@
             <form id="member-form">
                 <div class="form-group">
                     <label for="member-name">Name *</label>
-                    <input type="text" id="member-name" required>
+                    <input type="text" id="member-name" name="member-name" required>
                 </div>
                 <div class="form-group">
                     <label for="member-organization">Organization *</label>
-                    <input type="text" id="member-organization" required>
+                    <input type="text" id="member-organization" name="member-organization" required>
                 </div>
                 <div class="form-group">
                     <label for="member-title">Title *</label>
-                    <input type="text" id="member-title" required>
+                    <input type="text" id="member-title" name="member-title" required>
                 </div>
                 <div class="form-group">
                     <label for="member-email">Email *</label>
-                    <input type="email" id="member-email" required>
+                    <input type="email" id="member-email" name="member-email" required>
                 </div>
                 <div class="form-group">
                     <label for="member-phone">Phone Number *</label>
-                    <input type="tel" id="member-phone" required>
+                    <input type="tel" id="member-phone" name="member-phone" required>
                 </div>
                 <div class="form-group">
                     <label for="member-category">Category *</label>
-                    <select id="member-category" required>
+                    <select id="member-category" name="member-category" required>
                         <option value="">Select a category</option>
                         <option value="employer">Employer</option>
                         <option value="student">Student</option>
@@ -138,7 +170,7 @@
                 </div>
                 <div class="form-group">
                     <label for="member-status">Status *</label>
-                    <select id="member-status" required>
+                    <select id="member-status" name="member-status" required>
                         <option value="">Select a status</option>
                         <option value="core">Core</option>
                         <option value="non-core">Non-Core</option>
@@ -150,7 +182,7 @@
                 </div>
                 <div class="form-group">
                     <label for="member-expertise">Content Expertise</label>
-                    <textarea id="member-expertise" rows="3"></textarea>
+                    <textarea id="member-expertise" name="member-expertise" rows="3"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="member-profile-image">Profile Image</label>
@@ -170,6 +202,75 @@
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" id="cancel-member-btn">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Add Special Session Member -->
+    <div id="special-session-member-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Special Session Member</h2>
+                <button class="close-btn" id="close-special-session-member-modal">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <form id="special-session-member-form">
+                <div class="form-group">
+                    <label for="special-session-member-name">Name *</label>
+                    <input type="text" id="special-session-member-name" name="special-session-member-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="special-session-member-organization">Organization *</label>
+                    <input type="text" id="special-session-member-organization" name="special-session-member-organization" required>
+                </div>
+                <div class="form-group">
+                    <label for="special-session-member-title">Title *</label>
+                    <input type="text" id="special-session-member-title" name="special-session-member-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="special-session-member-email">Email *</label>
+                    <input type="email" id="special-session-member-email" name="special-session-member-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="special-session-member-phone">Phone Number *</label>
+                    <input type="tel" id="special-session-member-phone" name="special-session-member-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="special-session-member-category">Category *</label>
+                    <select id="special-session-member-category" name="special-session-member-category" required>
+                        <option value="">Select a category</option>
+                        <option value="employer">Employer</option>
+                        <option value="student">Student</option>
+                        <option value="non-profit">Non-Profit Organization</option>
+                        <option value="public-agency">Public Agency</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="special-session-member-expertise">Content Expertise</label>
+                    <textarea id="special-session-member-expertise" name="special-session-member-expertise" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="special-session-member-profile-image">Profile Image</label>
+                    <input type="file" id="special-session-member-profile-image" accept="image/*" style="display: none;">
+                    <div class="profile-image-upload-container">
+                        <div class="profile-image-preview" id="special-session-profile-image-preview">
+                            <span class="material-icons">person</span>
+                        </div>
+                        <button type="button" class="btn-secondary" id="upload-special-session-profile-image-btn">
+                            <span class="material-icons">upload</span>
+                            Upload Image (Mock)
+                        </button>
+                    </div>
+                    <div class="field-explanation">
+                        <p><strong>Mock Feature:</strong> This is a demonstration of profile image upload functionality. In a production environment, images would be uploaded to a server.</p>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancel-special-session-member-btn">Cancel</button>
                     <button type="submit" class="btn-primary">Add Member</button>
                 </div>
             </form>
@@ -222,8 +323,22 @@
             </div>
             <form id="meeting-form">
                 <div class="form-group">
+                    <label for="meeting-type">Meeting Type *</label>
+                    <select id="meeting-type" required>
+                        <option value="">Select a meeting type</option>
+                        <option value="advisory-board">Advisory Board Meeting</option>
+                        <option value="special-session">Special Session</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label for="meeting-date">Meeting Date *</label>
                     <input type="date" id="meeting-date" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="meeting-duration">Meeting Duration (hours) *</label>
+                    <input type="number" id="meeting-duration" min="0.5" max="8" step="0.5" value="2" required>
                 </div>
 
                 <div class="form-group">

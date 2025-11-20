@@ -133,12 +133,16 @@ export function tacticItemTemplate(tactic) {
  * Generate meeting card HTML
  */
 export function meetingCardTemplate(meeting) {
+    const meetingType = meeting.type || 'advisory-board';
+    const meetingTypeLabel = meetingType === 'advisory-board' ? 'Advisory Board' : 'Special Session';
+
     return `
-        <div class="meeting-card">
+        <div class="meeting-card ${meetingType}">
             <div class="meeting-header">
                 <div class="meeting-date">
                     <span class="material-icons">event</span>
                     <span>${formatDate(meeting.date)}</span>
+                    <span class="meeting-type-badge ${meetingType}">${meetingTypeLabel}</span>
                 </div>
                 <div class="meeting-menu">
                     <button class="meeting-menu-btn" data-action="toggle-meeting-menu" data-meeting-id="${meeting.id}">

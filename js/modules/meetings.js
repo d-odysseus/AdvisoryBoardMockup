@@ -33,6 +33,11 @@ export class MeetingsManager {
         // Add meeting button
         document.getElementById('add-meeting-btn')?.addEventListener('click', () => this.openMeetingModal());
 
+        // Meeting type change event
+        document.getElementById('meeting-type')?.addEventListener('change', () => {
+            this.handleMeetingTypeChange();
+        });
+
         // Tactics checkboxes change event
         document.getElementById('tactics-checkboxes')?.addEventListener('change', () => {
             this.handleTacticsChange();
@@ -72,8 +77,8 @@ export class MeetingsManager {
     }
 
     openMeetingModal() {
-        if (state.boardMembers.length === 0) {
-            this.errorModal.show('Please add board members before creating a meeting.');
+        if (state.boardMembers.length === 0 && state.specialSessionMembers.length === 0) {
+            this.errorModal.show('Please add board members or special session members before creating a meeting.');
             return;
         }
 
@@ -82,9 +87,13 @@ export class MeetingsManager {
             return;
         }
 
-        this.populateAttendees();
         this.populateTactics();
         this.modal.open();
+    }
+
+    handleMeetingTypeChange() {
+        const meetingType = document.getElementById('meeting-type')?.value;
+        this.populateAttendees(meetingType);
     }
 
     resetModal() {
@@ -94,13 +103,33 @@ export class MeetingsManager {
         this.modal.setSubmitText('Add Meeting');
     }
 
-    populateAttendees() {
+    populateAttendees(meetingType) {
         const container = document.getElementById('attendees-checkboxes');
         if (!container) return;
 
-        const checkboxes = state.boardMembers.map(member => {
+        let members = [];
+
+        if (!meetingType) {
+            container.innerHTML = '<p style="color: var(--text-secondary); font-size: 0.9rem;">Please select a meeting type first.</p>';
+            return;
+        }
+
+        if (meetingType === 'advisory-board') {
+            members = state.boardMembers;
+        } else if (meetingType === 'special-session') {
+            // For special sessions, include both board members and special session members
+            members = [...state.boardMembers, ...state.specialSessionMembers];
+        }
+
+        if (members.length === 0) {
+            container.innerHTML = '<p style="color: var(--text-secondary); font-size: 0.9rem;">No members available for this meeting type.</p>';
+            return;
+        }
+
+        const checkboxes = members.map(member => {
             const label = `${member.name} - ${member.organization}`;
-            return checkboxItemTemplate(`attendee-${member.id}`, member.id, label);
+            const memberType = member.status === 'special-session' ? ' (Special Session)' : '';
+            return checkboxItemTemplate(`attendee-${member.id}`, member.id, label + memberType);
         }).join('');
 
         container.innerHTML = checkboxes;
@@ -137,6 +166,13 @@ export class MeetingsManager {
     }
 
     handleAddMeeting() {
+        // Get meeting type
+        const meetingType = document.getElementById('meeting-type')?.value;
+        if (!meetingType) {
+            this.errorModal.show('Please select a meeting type.');
+            return;
+        }
+
         // Get selected attendees
         const attendeeIds = getCheckedValues('#attendees-checkboxes input');
         if (attendeeIds.length === 0) {
@@ -144,7 +180,9 @@ export class MeetingsManager {
             return;
         }
 
-        const attendees = state.boardMembers.filter(m => attendeeIds.includes(m.id));
+        // Get attendees from both board members and special session members
+        const allMembers = [...state.boardMembers, ...state.specialSessionMembers];
+        const attendees = allMembers.filter(m => attendeeIds.includes(m.id));
 
         // Get selected tactics with recommendations
         const tacticIds = getCheckedValues('#tactics-checkboxes input');
@@ -170,10 +208,18 @@ export class MeetingsManager {
             return;
         }
 
+        const meetingDuration = parseFloat(document.getElementById('meeting-duration')?.value);
+        if (!meetingDuration || meetingDuration <= 0) {
+            this.errorModal.show('Please enter a valid meeting duration.');
+            return;
+        }
+
         if (state.editingMeetingId) {
             // Edit existing meeting
             state.updateMeeting(state.editingMeetingId, {
+                type: meetingType,
                 date: meetingDate,
+                duration: meetingDuration,
                 attendees: attendees,
                 tacticsDiscussed: tacticsDiscussed
             });
@@ -181,7 +227,9 @@ export class MeetingsManager {
             // Add new meeting
             const meeting = {
                 id: generateId(),
+                type: meetingType,
                 date: meetingDate,
+                duration: meetingDuration,
                 attendees: attendees,
                 tacticsDiscussed: tacticsDiscussed
             };
@@ -216,14 +264,25 @@ export class MeetingsManager {
         this.modal.setTitle('Edit Meeting');
         this.modal.setSubmitText('Update Meeting');
 
+        // Populate meeting type
+        const typeField = document.getElementById('meeting-type');
+        if (typeField) {
+            typeField.value = meeting.type || 'advisory-board';
+        }
+
         // Populate form fields
         const dateField = document.getElementById('meeting-date');
         if (dateField) {
             dateField.value = meeting.date;
         }
 
-        // Populate attendees
-        this.populateAttendees();
+        const durationField = document.getElementById('meeting-duration');
+        if (durationField) {
+            durationField.value = meeting.duration || 2;
+        }
+
+        // Populate attendees based on meeting type
+        this.populateAttendees(meeting.type || 'advisory-board');
         meeting.attendees.forEach(attendee => {
             const checkbox = document.getElementById(`attendee-${attendee.id}`);
             if (checkbox) checkbox.checked = true;
@@ -261,6 +320,42 @@ export class MeetingsManager {
             return;
         }
 
-        this.container.innerHTML = meetings.map(meetingCardTemplate).join('');
+        // Group meetings by type
+        const advisoryMeetings = meetings.filter(m => m.type === 'advisory-board' || !m.type);
+        const specialSessions = meetings.filter(m => m.type === 'special-session');
+
+        let html = '';
+
+        // Advisory Board Meetings section
+        if (advisoryMeetings.length > 0) {
+            html += `
+                <div class="meetings-group">
+                    <div class="meetings-group-header">
+                        <span class="material-icons">event</span>
+                        <h3>Advisory Board Meetings</h3>
+                    </div>
+                    <div class="meetings-group-content">
+                        ${advisoryMeetings.map(meetingCardTemplate).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Special Sessions section
+        if (specialSessions.length > 0) {
+            html += `
+                <div class="meetings-group">
+                    <div class="meetings-group-header">
+                        <span class="material-icons">groups</span>
+                        <h3>Special Sessions</h3>
+                    </div>
+                    <div class="meetings-group-content">
+                        ${specialSessions.map(meetingCardTemplate).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        this.container.innerHTML = html;
     }
 }

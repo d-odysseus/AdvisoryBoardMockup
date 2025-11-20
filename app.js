@@ -5,6 +5,7 @@
 
 import { GoalsManager } from './js/modules/goals.js';
 import { MembersManager } from './js/modules/members.js';
+import { SpecialSessionMembersManager } from './js/modules/specialSessionMembers.js';
 import { MeetingsManager } from './js/modules/meetings.js';
 import { SummaryManager } from './js/modules/summary.js';
 import { DataLoader } from './js/modules/dataLoader.js';
@@ -25,6 +26,7 @@ class AdvisoryBoardApp {
         this.managers.summary = new SummaryManager();
         this.managers.goals = new GoalsManager();
         this.managers.members = new MembersManager();
+        this.managers.specialSessionMembers = new SpecialSessionMembersManager();
         this.managers.meetings = new MeetingsManager();
 
         // Load mock data
@@ -41,6 +43,7 @@ class AdvisoryBoardApp {
         this.managers.summary.update();
         this.managers.goals.render();
         this.managers.members.render();
+        this.managers.specialSessionMembers.render();
         this.managers.meetings.render();
     }
 }
