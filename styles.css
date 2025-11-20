@@ -74,6 +74,7 @@ body {
     align-items: center;
     gap: 1rem;
     transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
 }
 
 .summary-card:hover {
@@ -95,6 +96,42 @@ body {
 .summary-info p {
     color: var(--text-secondary);
     font-size: 0.9rem;
+}
+
+/* Volunteer Hours Card Specific Styles */
+.volunteer-hours-card {
+    position: relative;
+}
+
+.volunteer-hours-card .filter-btn {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.volunteer-hours-card .filter-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.volunteer-hours-card .filter-btn .material-icons {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+}
+
+.date-range-display {
+    color: var(--accent-color);
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
 }
 
 /* Section Styles */
@@ -125,6 +162,44 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+.section-title-with-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.section-title-with-filter h2 {
+    margin: 0;
+}
+
+.filter-icon-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filter-icon-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.filter-icon-btn .material-icons {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+}
+
+.section-date-range {
+    color: var(--accent-color);
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin: 0;
 }
 
 /* Tooltip Styles */

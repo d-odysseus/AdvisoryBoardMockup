@@ -63,6 +63,7 @@ export class MeetingsManager {
 
     setupStateSubscriptions() {
         state.subscribe('meetings', () => this.render());
+        state.subscribe('meetingsDateRange', () => this.render());
     }
 
     handleAction(action, meetingId, event) {
@@ -313,10 +314,15 @@ export class MeetingsManager {
     render() {
         if (!this.container) return;
 
-        const meetings = state.meetings;
+        // Get filtered meetings based on date range
+        const meetings = state.getFilteredMeetings();
 
         if (meetings.length === 0) {
-            this.container.innerHTML = emptyStateTemplate('event_note', 'No meetings recorded yet. Click "Add Meeting" to get started.');
+            const hasDateFilter = state.meetingsDateRange.startDate || state.meetingsDateRange.endDate;
+            const message = hasDateFilter
+                ? 'No meetings found for the selected date range.'
+                : 'No meetings recorded yet. Click "Add Meeting" to get started.';
+            this.container.innerHTML = emptyStateTemplate('event_note', message);
             return;
         }
 

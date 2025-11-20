@@ -14,6 +14,8 @@ class AppState {
         this._selectedTacticYear = DEFAULT_TACTIC_YEAR;
         this._currentProfileImage = null;
         this._editingMeetingId = null;
+        this._volunteerHoursDateRange = { startDate: null, endDate: null };
+        this._meetingsDateRange = { startDate: null, endDate: null };
         this._observers = new Map();
     }
 
@@ -180,10 +182,78 @@ class AppState {
         this._editingMeetingId = value;
     }
 
+    // Volunteer Hours Date Range
+    get volunteerHoursDateRange() {
+        return { ...this._volunteerHoursDateRange };
+    }
+
+    set volunteerHoursDateRange(value) {
+        this._volunteerHoursDateRange = value;
+        this._notify('volunteerHoursDateRange');
+    }
+
+    // Meetings Date Range
+    get meetingsDateRange() {
+        return { ...this._meetingsDateRange };
+    }
+
+    set meetingsDateRange(value) {
+        this._meetingsDateRange = value;
+        this._notify('meetingsDateRange');
+    }
+
+    // Filter meetings by date range
+    getFilteredMeetings() {
+        if (!this._meetingsDateRange.startDate && !this._meetingsDateRange.endDate) {
+            return [...this._meetings];
+        }
+
+        return this._meetings.filter(meeting => {
+            const meetingDate = new Date(meeting.date);
+
+            if (this._meetingsDateRange.startDate && this._meetingsDateRange.endDate) {
+                const startDate = new Date(this._meetingsDateRange.startDate);
+                const endDate = new Date(this._meetingsDateRange.endDate);
+                return meetingDate >= startDate && meetingDate <= endDate;
+            } else if (this._meetingsDateRange.startDate) {
+                const startDate = new Date(this._meetingsDateRange.startDate);
+                return meetingDate >= startDate;
+            } else if (this._meetingsDateRange.endDate) {
+                const endDate = new Date(this._meetingsDateRange.endDate);
+                return meetingDate <= endDate;
+            }
+
+            return true;
+        });
+    }
+
     // Summary counts
     getSummary() {
-        // Calculate total volunteer hours
-        const totalVolunteerHours = this._meetings.reduce((total, meeting) => {
+        // Filter meetings by date range if set
+        let filteredMeetings = this._meetings;
+
+        if (this._volunteerHoursDateRange.startDate || this._volunteerHoursDateRange.endDate) {
+            filteredMeetings = this._meetings.filter(meeting => {
+                const meetingDate = new Date(meeting.date);
+
+                if (this._volunteerHoursDateRange.startDate && this._volunteerHoursDateRange.endDate) {
+                    const startDate = new Date(this._volunteerHoursDateRange.startDate);
+                    const endDate = new Date(this._volunteerHoursDateRange.endDate);
+                    return meetingDate >= startDate && meetingDate <= endDate;
+                } else if (this._volunteerHoursDateRange.startDate) {
+                    const startDate = new Date(this._volunteerHoursDateRange.startDate);
+                    return meetingDate >= startDate;
+                } else if (this._volunteerHoursDateRange.endDate) {
+                    const endDate = new Date(this._volunteerHoursDateRange.endDate);
+                    return meetingDate <= endDate;
+                }
+
+                return true;
+            });
+        }
+
+        // Calculate total volunteer hours from filtered meetings
+        const totalVolunteerHours = filteredMeetings.reduce((total, meeting) => {
             const attendeeCount = meeting.attendees ? meeting.attendees.length : 0;
             const duration = meeting.duration || 0;
             return total + (attendeeCount * duration);

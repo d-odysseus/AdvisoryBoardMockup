@@ -50,11 +50,15 @@
                         <p>Meetings</p>
                     </div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card volunteer-hours-card">
+                    <button class="filter-btn" id="volunteer-hours-filter-btn" title="Filter by date range">
+                        <span class="material-icons">filter_list</span>
+                    </button>
                     <span class="material-icons">schedule</span>
                     <div class="summary-info">
                         <h3 id="volunteer-hours">0</h3>
-                        <p>Volunteer Hours</p>
+                        <p id="volunteer-hours-label">Volunteer Hours</p>
+                        <p class="date-range-display" id="volunteer-hours-date-range"></p>
                     </div>
                 </div>
             </section>
@@ -116,7 +120,13 @@
             <!-- Meetings Section -->
             <section class="section">
                 <div class="section-header">
-                    <h2>Meetings</h2>
+                    <div class="section-title-with-filter">
+                        <h2>Meetings</h2>
+                        <button class="filter-icon-btn" id="meetings-filter-btn" title="Filter by date range">
+                            <span class="material-icons">filter_list</span>
+                        </button>
+                        <p class="section-date-range" id="meetings-date-range"></p>
+                    </div>
                     <button class="btn-primary" id="add-meeting-btn">
                         <span class="material-icons">add</span>
                         Add Meeting
@@ -398,6 +408,64 @@
             <div class="error-modal-actions">
                 <button class="btn-primary" id="close-error-modal">OK</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Date Range Filter Modal for Volunteer Hours -->
+    <div id="date-range-modal" class="modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2>Filter Volunteer Hours</h2>
+                <button class="close-btn" id="close-date-range-modal">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <form id="date-range-form">
+                <div class="form-group">
+                    <label for="start-date">Start Date</label>
+                    <input type="date" id="start-date" name="start-date">
+                </div>
+                <div class="form-group">
+                    <label for="end-date">End Date</label>
+                    <input type="date" id="end-date" name="end-date">
+                </div>
+                <div class="field-explanation">
+                    <p>Leave both fields empty to show all volunteer hours since data collection began.</p>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="reset-date-range-btn">Reset to All Time</button>
+                    <button type="submit" class="btn-primary">Apply Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Date Range Filter Modal for Meetings -->
+    <div id="meetings-date-range-modal" class="modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2>Filter Meetings</h2>
+                <button class="close-btn" id="close-meetings-date-range-modal">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <form id="meetings-date-range-form">
+                <div class="form-group">
+                    <label for="meetings-start-date">Start Date</label>
+                    <input type="date" id="meetings-start-date" name="meetings-start-date">
+                </div>
+                <div class="form-group">
+                    <label for="meetings-end-date">End Date</label>
+                    <input type="date" id="meetings-end-date" name="meetings-end-date">
+                </div>
+                <div class="field-explanation">
+                    <p>Leave both fields empty to show all meetings.</p>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="reset-meetings-date-range-btn">Reset to All Time</button>
+                    <button type="submit" class="btn-primary">Apply Filter</button>
+                </div>
+            </form>
         </div>
     </div>
 

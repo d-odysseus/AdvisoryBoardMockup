@@ -8,6 +8,8 @@ import { MembersManager } from './js/modules/members.js';
 import { SpecialSessionMembersManager } from './js/modules/specialSessionMembers.js';
 import { MeetingsManager } from './js/modules/meetings.js';
 import { SummaryManager } from './js/modules/summary.js';
+import { VolunteerHoursFilter } from './js/modules/volunteerHoursFilter.js';
+import { MeetingsDateFilter } from './js/modules/meetingsDateFilter.js';
 import { DataLoader } from './js/modules/dataLoader.js';
 
 /**
@@ -28,6 +30,8 @@ class AdvisoryBoardApp {
         this.managers.members = new MembersManager();
         this.managers.specialSessionMembers = new SpecialSessionMembersManager();
         this.managers.meetings = new MeetingsManager();
+        this.managers.volunteerHoursFilter = new VolunteerHoursFilter();
+        this.managers.meetingsDateFilter = new MeetingsDateFilter();
 
         // Load mock data
         DataLoader.loadMockData();
