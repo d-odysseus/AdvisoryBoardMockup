@@ -3,7 +3,7 @@
  * Centralized state with observer pattern for reactive updates
  */
 
-import { DEFAULT_TACTIC_YEAR } from '../config/constants.js';
+import { DEFAULT_TACTIC_YEAR, DEFAULT_DEPARTMENT } from '../config/constants.js';
 
 class AppState {
     constructor() {
@@ -11,6 +11,9 @@ class AppState {
         this._specialSessionMembers = [];
         this._priorityGoals = [];
         this._meetings = [];
+        this._highSchoolPartners = [];
+        this._highSchoolInteractions = [];
+        this._currentDepartment = DEFAULT_DEPARTMENT;
         this._selectedTacticYear = DEFAULT_TACTIC_YEAR;
         this._currentProfileImage = null;
         this._editingMeetingId = null;
@@ -157,6 +160,15 @@ class AppState {
     }
 
     // UI State
+    get currentDepartment() {
+        return this._currentDepartment;
+    }
+
+    set currentDepartment(value) {
+        this._currentDepartment = value;
+        this._notify('currentDepartment');
+    }
+
     get selectedTacticYear() {
         return this._selectedTacticYear;
     }
@@ -225,6 +237,70 @@ class AppState {
 
             return true;
         });
+    }
+
+    // High School Partners
+    get highSchoolPartners() {
+        return [...this._highSchoolPartners];
+    }
+
+    set highSchoolPartners(value) {
+        this._highSchoolPartners = value;
+        this._notify('highSchoolPartners');
+    }
+
+    addHighSchoolPartner(partner) {
+        this._highSchoolPartners.push(partner);
+        this._notify('highSchoolPartners');
+    }
+
+    updateHighSchoolPartner(id, updatedData) {
+        const index = this._highSchoolPartners.findIndex(p => p.id === id);
+        if (index !== -1) {
+            this._highSchoolPartners[index] = { ...this._highSchoolPartners[index], ...updatedData };
+            this._notify('highSchoolPartners');
+        }
+    }
+
+    deleteHighSchoolPartner(id) {
+        this._highSchoolPartners = this._highSchoolPartners.filter(p => p.id !== id);
+        this._notify('highSchoolPartners');
+    }
+
+    getHighSchoolPartnerById(id) {
+        return this._highSchoolPartners.find(p => p.id === id);
+    }
+
+    // High School Interactions
+    get highSchoolInteractions() {
+        return [...this._highSchoolInteractions];
+    }
+
+    set highSchoolInteractions(value) {
+        this._highSchoolInteractions = value;
+        this._notify('highSchoolInteractions');
+    }
+
+    addHighSchoolInteraction(interaction) {
+        this._highSchoolInteractions.push(interaction);
+        this._notify('highSchoolInteractions');
+    }
+
+    updateHighSchoolInteraction(id, updatedData) {
+        const index = this._highSchoolInteractions.findIndex(i => i.id === id);
+        if (index !== -1) {
+            this._highSchoolInteractions[index] = { ...this._highSchoolInteractions[index], ...updatedData };
+            this._notify('highSchoolInteractions');
+        }
+    }
+
+    deleteHighSchoolInteraction(id) {
+        this._highSchoolInteractions = this._highSchoolInteractions.filter(i => i.id !== id);
+        this._notify('highSchoolInteractions');
+    }
+
+    getHighSchoolInteractionById(id) {
+        return this._highSchoolInteractions.find(i => i.id === id);
     }
 
     // Summary counts

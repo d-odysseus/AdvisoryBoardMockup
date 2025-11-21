@@ -20,6 +20,28 @@
 
         <!-- Main Content -->
         <main class="dashboard-main">
+            <!-- Department Selector -->
+            <div class="department-selector-container">
+                <label for="department-selector">
+                    <span class="material-icons">business</span>
+                    Program/Department:
+                </label>
+                <select id="department-selector" class="department-dropdown">
+                    <option value="automotive">Automotive Technologies</option>
+                    <option value="dental">Dental Hygiene</option>
+                    <option value="media">Integrated Media</option>
+                    <option value="fisheries">Fisheries</option>
+                </select>
+            </div>
+
+            <!-- Tab Navigation -->
+            <nav class="tab-navigation">
+                <button class="tab-btn active" data-tab="advisory-board">Advisory Board Meetings</button>
+                <button class="tab-btn" data-tab="high-school">High School Interactions</button>
+            </nav>
+
+            <!-- Advisory Board Tab Content -->
+            <div id="advisory-board-tab" class="tab-content active">
             <!-- Summary Cards -->
             <section class="summary-section">
                 <div class="summary-card">
@@ -134,6 +156,64 @@
                 </div>
                 <div id="meetings-list" class="meetings-list"></div>
             </section>
+            </div>
+
+            <!-- High School Interactions Tab Content -->
+            <div id="high-school-tab" class="tab-content">
+                <!-- Perkins Eligibility Information -->
+                <section class="info-banner">
+                    <div class="info-banner-header">
+                        <span class="material-icons">info</span>
+                        <h3>Perkins Eligibility Information</h3>
+                    </div>
+                    <div class="info-banner-content">
+                        <p><strong>Eligible High Schools for Perkins:</strong></p>
+                        <p>Interactions count towards Perkins eligibility with the following high schools:</p>
+                        <ul class="info-list" id="perkins-schools-list">
+                            <!-- Dynamically populated based on selected department -->
+                        </ul>
+                        <p><strong>Important:</strong> The high school needs to have a program of study or career area aligned with the college program.</p>
+                        <p>
+                            <strong>View Programs of Study:</strong>
+                            <a href="https://www.ode.state.or.us/apps/CTEReports/ApprovedPrograms/Details" target="_blank" rel="noopener noreferrer">
+                                Oregon CTE Approved Programs Database
+                                <span class="material-icons" style="font-size: 1rem; vertical-align: middle;">open_in_new</span>
+                            </a>
+                            (Select the year and high school to view their programs of study and career areas)
+                        </p>
+                    </div>
+                </section>
+
+                <!-- High School Partners Section -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-with-tooltip">
+                            <h2>High School Partners</h2>
+                            <div class="tooltip-container">
+                                <span class="material-icons tooltip-icon">info</span>
+                                <div class="tooltip-text">Track points of contact at high school partner institutions.</div>
+                            </div>
+                        </div>
+                        <button class="btn-primary" id="add-hs-partner-btn">
+                            <span class="material-icons">person_add</span>
+                            Add High School Partner
+                        </button>
+                    </div>
+                    <div id="hs-partners-list" class="members-grid"></div>
+                </section>
+
+                <!-- High School Interactions Section -->
+                <section class="section">
+                    <div class="section-header">
+                        <h2>High School Interactions</h2>
+                        <button class="btn-primary" id="add-hs-interaction-btn">
+                            <span class="material-icons">add</span>
+                            Add Interaction
+                        </button>
+                    </div>
+                    <div id="hs-interactions-list" class="meetings-list"></div>
+                </section>
+            </div>
         </main>
     </div>
 
@@ -464,6 +544,113 @@
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" id="reset-meetings-date-range-btn">Reset to All Time</button>
                     <button type="submit" class="btn-primary">Apply Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Add High School Partner -->
+    <div id="hs-partner-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add High School Partner</h2>
+                <button class="close-btn" id="close-hs-partner-modal">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <form id="hs-partner-form">
+                <div class="form-group">
+                    <label for="hs-partner-name">Name *</label>
+                    <input type="text" id="hs-partner-name" name="hs-partner-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="hs-partner-school">School *</label>
+                    <input type="text" id="hs-partner-school" name="hs-partner-school" required>
+                </div>
+                <div class="form-group">
+                    <label for="hs-partner-title">Title *</label>
+                    <input type="text" id="hs-partner-title" name="hs-partner-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="hs-partner-email">Email *</label>
+                    <input type="email" id="hs-partner-email" name="hs-partner-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="hs-partner-phone">Phone Number *</label>
+                    <input type="tel" id="hs-partner-phone" name="hs-partner-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="hs-partner-role">Role Description</label>
+                    <textarea id="hs-partner-role" name="hs-partner-role" rows="3" placeholder="What they do..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancel-hs-partner-btn">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Partner</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Add High School Interaction -->
+    <div id="hs-interaction-modal" class="modal">
+        <div class="modal-content modal-wide">
+            <div class="modal-header">
+                <h2>Add High School Interaction</h2>
+                <button class="close-btn" id="close-hs-interaction-modal">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <form id="hs-interaction-form">
+                <div class="form-group">
+                    <label for="hs-interaction-date">Date *</label>
+                    <input type="date" id="hs-interaction-date" name="hs-interaction-date" required>
+                </div>
+
+                <div class="form-group">
+                    <label>High School Partners</label>
+                    <div class="checkbox-grid" id="hs-partners-checkboxes">
+                        <!-- Dynamically populated with partners -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="hs-interaction-other-participants">Other Participants</label>
+                    <textarea id="hs-interaction-other-participants" name="hs-interaction-other-participants" rows="2" placeholder="Add other participants (free text)"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Interaction Types *</label>
+                    <div class="field-explanation">
+                        <p>Select all that apply</p>
+                    </div>
+                    <div class="checkbox-grid" id="interaction-types-checkboxes">
+                        <!-- Dynamically populated from constants -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="hs-interaction-description">Description *</label>
+                    <textarea id="hs-interaction-description" name="hs-interaction-description" rows="4" required placeholder="Describe the interaction..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="hs-interaction-artifacts">Artifacts (Max 3)</label>
+                    <input type="file" id="hs-interaction-artifacts" name="hs-interaction-artifacts" accept=".pdf,.doc,.docx,.ppt,.pptx" multiple style="display: none;">
+                    <div class="artifacts-upload-container">
+                        <button type="button" class="btn-secondary" id="upload-artifacts-btn">
+                            <span class="material-icons">upload</span>
+                            Upload Artifacts (Mock)
+                        </button>
+                        <div class="field-explanation">
+                            <p>Accepted formats: PDF, DOC, DOCX, PPT, PPTX (Max 3 files)</p>
+                        </div>
+                        <div id="artifacts-list" class="artifacts-list"></div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancel-hs-interaction-btn">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Interaction</button>
                 </div>
             </form>
         </div>

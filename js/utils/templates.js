@@ -175,11 +175,13 @@ export function meetingCardTemplate(meeting) {
 /**
  * Generate checkbox item HTML
  */
-export function checkboxItemTemplate(id, value, label, title = '') {
+export function checkboxItemTemplate(id, value, label, nameOrTitle = '') {
+    // Support both the old signature (id, value, label, title) and new (id, value, label, name)
+    const isName = !nameOrTitle.includes(' '); // Simple heuristic: names don't have spaces, titles usually do
     return `
         <div class="checkbox-item">
-            <input type="checkbox" id="${id}" value="${value}">
-            <label for="${id}" ${title ? `title="${escapeHtml(title)}"` : ''}>${escapeHtml(label)}</label>
+            <input type="checkbox" id="${id}" value="${escapeHtml(value)}" ${isName ? `name="${nameOrTitle}"` : ''}>
+            <label for="${id}" ${!isName && nameOrTitle ? `title="${escapeHtml(nameOrTitle)}"` : ''}>${escapeHtml(label)}</label>
         </div>
     `;
 }
@@ -204,4 +206,131 @@ export function recommendationSectionTemplate(tactic) {
  */
 export function dropdownOptionTemplate(value, text, title = '') {
     return `<option value="${value}" ${title ? `title="${escapeHtml(title)}"` : ''}>${escapeHtml(text)}</option>`;
+}
+
+/**
+ * Generate high school partner card HTML
+ */
+export function hsPartnerCardTemplate(partner) {
+    return `
+        <div class="member-card">
+            <div class="member-profile-section">
+                <div class="member-profile-image">
+                    <span class="material-icons">school</span>
+                </div>
+                <div class="member-profile-info">
+                    <div class="member-card-header">
+                        <h3>${escapeHtml(partner.name)}</h3>
+                        <div class="member-menu">
+                            <button class="member-menu-btn" data-action="toggle-partner-menu" data-partner-id="${partner.id}">
+                                <span class="material-icons">more_vert</span>
+                            </button>
+                            <div class="member-menu-dropdown" id="menu-${partner.id}">
+                                <div class="member-menu-item" data-action="edit-partner" data-partner-id="${partner.id}">
+                                    <span class="material-icons">edit</span>
+                                    <span>Edit</span>
+                                </div>
+                                <div class="member-menu-item" data-action="delete-partner" data-partner-id="${partner.id}">
+                                    <span class="material-icons">delete</span>
+                                    <span>Delete</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="member-title">${escapeHtml(partner.title)}</div>
+                    <div class="member-org">${escapeHtml(partner.school)}</div>
+                </div>
+            </div>
+            <div class="member-contact">
+                <span class="material-icons">email</span>
+                ${escapeHtml(partner.email)}
+            </div>
+            <div class="member-contact">
+                <span class="material-icons">phone</span>
+                ${escapeHtml(partner.phone)}
+            </div>
+            ${partner.role ? `<div class="member-expertise"><strong>Role:</strong> ${escapeHtml(partner.role)}</div>` : ''}
+        </div>
+    `;
+}
+
+/**
+ * Generate high school interaction card HTML
+ */
+export function hsInteractionCardTemplate(interaction) {
+    const participantsList = [];
+    if (interaction.partners && interaction.partners.length > 0) {
+        participantsList.push(...interaction.partners);
+    }
+    if (interaction.otherParticipants) {
+        participantsList.push(interaction.otherParticipants);
+    }
+
+    return `
+        <div class="hs-interaction-card">
+            <div class="hs-interaction-header">
+                <div class="hs-interaction-date">
+                    <span class="material-icons">event</span>
+                    ${formatDate(interaction.date)}
+                </div>
+                <div class="hs-interaction-actions">
+                    <button class="action-btn edit" data-action="edit-interaction" data-interaction-id="${interaction.id}">
+                        <span class="material-icons">edit</span>
+                    </button>
+                    <button class="action-btn delete" data-action="delete-interaction" data-interaction-id="${interaction.id}">
+                        <span class="material-icons">delete</span>
+                    </button>
+                </div>
+            </div>
+
+            ${interaction.types && interaction.types.length > 0 ? `
+            <div class="hs-interaction-types">
+                ${interaction.types.map(type => `
+                    <span class="interaction-type-badge">${escapeHtml(type)}</span>
+                `).join('')}
+            </div>
+            ` : ''}
+
+            <div class="hs-interaction-description">
+                ${escapeHtml(interaction.description)}
+            </div>
+
+            ${participantsList.length > 0 ? `
+            <div class="hs-interaction-participants">
+                <h4>Participants:</h4>
+                <ul class="participants-list">
+                    ${participantsList.map(p => `<li>${escapeHtml(p)}</li>`).join('')}
+                </ul>
+            </div>
+            ` : ''}
+
+            ${interaction.artifacts && interaction.artifacts.length > 0 ? `
+            <div class="hs-interaction-artifacts">
+                ${interaction.artifacts.map(artifact => `
+                    <div class="artifact-badge">
+                        <span class="material-icons">attach_file</span>
+                        <span>${escapeHtml(artifact)}</span>
+                    </div>
+                `).join('')}
+            </div>
+            ` : ''}
+        </div>
+    `;
+}
+
+/**
+ * Generate artifact item HTML for upload list
+ */
+export function artifactItemTemplate(index, fileName) {
+    return `
+        <div class="artifact-item" data-index="${index}">
+            <div class="artifact-info">
+                <span class="material-icons">description</span>
+                <span class="artifact-name">${escapeHtml(fileName)}</span>
+            </div>
+            <button type="button" class="artifact-remove" data-action="remove-artifact" data-index="${index}">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+    `;
 }

@@ -4,34 +4,48 @@
  */
 
 import { state } from './state.js';
-import { MOCK_MEMBERS, MOCK_SPECIAL_SESSION_MEMBERS, MOCK_GOALS, MOCK_MEETINGS } from '../config/mockData.js';
+import { DEPARTMENT_DATA } from '../config/mockData.js';
 import { AVAILABLE_TACTICS } from '../config/constants.js';
 
 export class DataLoader {
     /**
-     * Load all mock data into the application state
+     * Load mock data for the current department
      */
     static loadMockData() {
+        const departmentId = state.currentDepartment;
+        const data = DEPARTMENT_DATA[departmentId];
+
+        if (!data) {
+            console.error(`No data found for department: ${departmentId}`);
+            return;
+        }
+
         // Load members
-        state.boardMembers = [...MOCK_MEMBERS];
+        state.boardMembers = [...data.members];
 
         // Load special session members
-        state.specialSessionMembers = [...MOCK_SPECIAL_SESSION_MEMBERS];
+        state.specialSessionMembers = [...data.specialSessionMembers];
 
         // Load goals
-        const goals = MOCK_GOALS
+        const goals = data.goals
             .map(tacticId => AVAILABLE_TACTICS.find(t => t.id === tacticId))
             .filter(Boolean);
         state.priorityGoals = goals;
 
         // Load meetings with populated attendees
-        const meetings = MOCK_MEETINGS.map(meeting => ({
+        const meetings = data.meetings.map(meeting => ({
             ...meeting,
             attendees: meeting.attendeeIds
-                .map(id => state.boardMembers.find(m => m.id === id))
-                .filter(Boolean)
+                ?.map(id => data.members.find(m => m.id === id))
+                .filter(Boolean) || []
         }));
         state.meetings = meetings;
+
+        // Load high school partners
+        state.highSchoolPartners = [...data.highSchoolPartners];
+
+        // Load high school interactions
+        state.highSchoolInteractions = [...data.highSchoolInteractions];
     }
 
     /**
@@ -42,5 +56,7 @@ export class DataLoader {
         state.specialSessionMembers = [];
         state.priorityGoals = [];
         state.meetings = [];
+        state.highSchoolPartners = [];
+        state.highSchoolInteractions = [];
     }
 }

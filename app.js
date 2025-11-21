@@ -10,6 +10,10 @@ import { MeetingsManager } from './js/modules/meetings.js';
 import { SummaryManager } from './js/modules/summary.js';
 import { VolunteerHoursFilter } from './js/modules/volunteerHoursFilter.js';
 import { MeetingsDateFilter } from './js/modules/meetingsDateFilter.js';
+import { HighSchoolPartnersManager } from './js/modules/highSchoolPartners.js';
+import { HighSchoolInteractionsManager } from './js/modules/highSchoolInteractions.js';
+import { TabManager } from './js/modules/tabManager.js';
+import { DepartmentManager } from './js/modules/departmentManager.js';
 import { DataLoader } from './js/modules/dataLoader.js';
 
 /**
@@ -24,6 +28,12 @@ class AdvisoryBoardApp {
      * Initialize the application
      */
     init() {
+        // Initialize department manager first (before loading data)
+        this.managers.department = new DepartmentManager();
+
+        // Initialize tab manager
+        this.managers.tabs = new TabManager();
+
         // Initialize all module managers
         this.managers.summary = new SummaryManager();
         this.managers.goals = new GoalsManager();
@@ -32,6 +42,8 @@ class AdvisoryBoardApp {
         this.managers.meetings = new MeetingsManager();
         this.managers.volunteerHoursFilter = new VolunteerHoursFilter();
         this.managers.meetingsDateFilter = new MeetingsDateFilter();
+        this.managers.highSchoolPartners = new HighSchoolPartnersManager();
+        this.managers.highSchoolInteractions = new HighSchoolInteractionsManager();
 
         // Load mock data
         DataLoader.loadMockData();
@@ -49,6 +61,8 @@ class AdvisoryBoardApp {
         this.managers.members.render();
         this.managers.specialSessionMembers.render();
         this.managers.meetings.render();
+        this.managers.highSchoolPartners.render();
+        this.managers.highSchoolInteractions.render();
     }
 }
 
